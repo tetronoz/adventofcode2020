@@ -40,34 +40,34 @@ def is_key_valid(k, v):
 
     return valid
 
-def is_all_keys_present(passport_data, required_fields):
+def is_all_keys_present(passport_keys, required_fields):
     valid = True
-    extracted_fields = set()
-    data_splitted = " ".join(passport_data).split()
-    for d in data_splitted:
-        key = d.split(':')[0]
-        extracted_fields.add(key)
     
     for k in required_fields:
-        if k not in extracted_fields:
+        if k not in passport_keys:
             return False
     
     return valid
 
 def are_keys_valid(passport_data):
     valid = True
-    data_splitted = " ".join(passport_data).split()
-    for data in data_splitted:
-        key, value = data.split(':')
+    
+    for key, value in passport_data.items():
         if not is_key_valid(key, value):
             return False
     return valid
 
 def is_passport_valid(passport_data, required_fields):
     all_keys_valid = False
-    have_all_keys = is_all_keys_present(passport_data, required_fields)
+    data_splitted = " ".join(passport_data).split()
+    fields_and_values = {}
+    for data in data_splitted:
+        key, value = data.split(':')
+        fields_and_values[key] = value
+
+    have_all_keys = is_all_keys_present(fields_and_values.keys(), required_fields)
     if have_all_keys:
-        all_keys_valid = are_keys_valid(passport_data)
+        all_keys_valid = are_keys_valid(fields_and_values)
 
     return have_all_keys, all_keys_valid
     
