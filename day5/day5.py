@@ -26,18 +26,9 @@ def get_seat_position(boarding_pass):
     return row, col
 
 def get_out_seat_id(seat_ids):
-    # add all front seats' ids
-    for col in range(9):
-        s_id = 0 * 8 + col
-        seat_ids.add(s_id)
-
-    # add all back seats' ids
-    for col in range(9):
-        s_id = 127 * 8 + col
-        seat_ids.add(s_id)
     
-    # go through all possible seat ids and find the one missing
-    for row in range(128):
+    # go through all possible seat ids excluding the very front (0) and back (127) rows
+    for row in range(1, 127):
         for col in range(9):
             t_id = row * 8 + col
             if t_id not in seat_ids and (t_id - 1 in seat_ids and t_id + 1 in seat_ids):
@@ -47,7 +38,6 @@ def get_out_seat_id(seat_ids):
 def process_boarding_passes(filename):
     highest_seat_id = float("-inf")
     all_seat_ids = set()
-    our_seat_id = None
     with open(filename) as fp:
         for line in fp:
             boarding_pass = line.strip()
