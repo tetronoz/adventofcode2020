@@ -25,7 +25,7 @@ def get_wrong_number(wsize):
     p2 = target_idx
     p1 = p2 - window
     
-    while p1 > 0:
+    while p1 >= 0:
         target = data[target_idx]
         nums = data[p1:p2]
         if not find_two_sum(nums, target):
