@@ -63,7 +63,7 @@ Used ideas from reddit (https://www.reddit.com/r/adventofcode/comments/ka8z8x/20
 DP is for rescue. Still need to get a better grip of DP 
 '''
 def count_ways(jolts):
-    ways = defaultdict(lambda: 0)
+    ways = defaultdict(int)
     ways[0] = 1
     for jolt in jolts:
         ways[jolt] = ways[jolt - 3] + ways[jolt - 2] + ways[jolt - 1]
