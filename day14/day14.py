@@ -19,22 +19,11 @@ def get_value_address(line):
     
     return value, address
 
-def apply_mask(value, mask):
-    value_as_bin = list(bin(value)[2:])
-    zeros = 36 - len(value_as_bin)
-    full_binary_value = ['0'] * zeros
-    for v in value_as_bin:
-        full_binary_value.append(v)
-    
-    assert len(full_binary_value) == 36
-    assert len(mask) == 36
+def apply_bitmask(value, mask):
+    mask_off = int(mask.replace('X', '0'), 2)
+    mask_on = int(mask.replace('X', '1'), 2)
 
-    for i in range(len(mask)):
-        if mask[i] == 'X':
-            continue
-        full_binary_value[i] = mask[i]
-    
-    return int("".join(full_binary_value), 2)
+    return (value | mask_off) & mask_on
 
 def get_addresses(address, mask):
     zeros = 36 - len(address)
@@ -75,14 +64,13 @@ def sum_values_in_memory(filename):
         for line in fp:
             line = line.strip()
             if line.startswith("mask"):
-                mask = list(line.split("=")[1].lstrip())
+                mask = line.split("=")[1].lstrip()
             else:
                 value, address = get_value_address(line)
-                new_value = apply_mask(value, mask)
-                mem[address] = new_value
+                mem[address] = apply_bitmask(value, mask)
                 for addr in get_addresses(list(bin(address)[2:]), mask):
                     mem2[addr] = value
-
+    
     return sum(mem.values()), sum(mem2.values())
 
 print(sum_values_in_memory(filename))
